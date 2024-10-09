@@ -1,45 +1,36 @@
 using lab1.app.Data;
 using lab1.app.Data.Models;
+using lab1.app.Extensions;
+using lab1.app.Interfaces;
+using lab1.app.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<CinemaDbContext>(opt => 
-opt.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=CinemaWebDb;Integrated Security=True;TrustServerCertificate=True"));
+builder.Services.AddRazorPages();
+builder.Services.AddDbContext(builder.Configuration);
+builder.Services.AddServices();
+
 var app = builder.Build();
 
-app.MapGet("/Home", async (CinemaDbContext dbContext) =>
+app.MapGet("/", () =>
 {
-    var films = await dbContext.Films.ToListAsync();
-
-    string html = "<html><head><title>Film List</title></head><body>";
-    html += "<h1>Film List</h1>";
-    html += "<table border='1'>";
-    html += "<tr><th>Id</th><th>Name</th><th>Description</th></tr>";
-
-    foreach (var film in films)
-    {
-        html += $"<tr><td>{film.Id}</td><td>{film.Name}</td><td>{film.Description}</td></tr>";
-    }
-
-    html += "</table>";
-    html += "</body></html>";
-
-    return Results.Content(html, "text/html");
+    return Results.Redirect("/Index");
 });
 
-    return Results.Content(html, "text/html");
-});
-app.MapPost("/AddFilm", async (HttpContext context, CinemaDbContext dbContext) =>
+app.MapPost("/AddFilm", async (HttpContext context, IFilmService filmService) =>
 {
     var form = await context.Request.ReadFormAsync();
     string name = form["name"]!;
     string description = form["description"]!;
 
     var newFilm = new Film { Name = name, Description = description };
-    dbContext.Films.Add(newFilm);
-    await dbContext.SaveChangesAsync();
+    await filmService.AddFilmAsync(newFilm);
 
-    return Results.Redirect("/Home");
+    return Results.Redirect("/Index");
 });
+
+app.UseMiddleware<CinemaMiddleware>();
+
+app.MapRazorPages();
 
 app.Run();

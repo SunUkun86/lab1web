@@ -1,0 +1,18 @@
+﻿@page
+@model lab1.app.Pages.AddFilmModel
+@{
+    ViewData["Title"] = "Add New Film";
+}
+
+<h1>Add New Film</h1>
+<form method="post" action="/AddFilm">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="Name" /><br>
+
+    <label for="description">Description:</label><br>
+    <input type="text" id="description" name="Description" /><br><br>
+
+    <input type="submit" value="Add" />
+</form>
+
+<a href="/Index">Back to Film List</a>

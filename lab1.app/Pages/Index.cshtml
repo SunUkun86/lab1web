@@ -1,0 +1,24 @@
+﻿@page
+@model lab1.app.Pages.IndexModel
+@{
+    ViewData["Title"] = "Film List";
+}
+
+<h1>Film List</h1>
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    @foreach (var film in Model.Films)
+    {
+        <tr>
+            <td>@film.Id</td>
+            <td>@film.Name</td>
+            <td>@film.Description</td>
+        </tr>
+    }
+</table>
+
+<a href="/AddFilm">Add New Film</a>
