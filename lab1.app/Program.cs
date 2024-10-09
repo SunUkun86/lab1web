@@ -26,18 +26,6 @@ app.MapGet("/Home", async (CinemaDbContext dbContext) =>
 
     return Results.Content(html, "text/html");
 });
-app.MapGet("/AddFilm", () =>
-{
-    string html = "<html><head><title>Add New Film</title></head><body>";
-    html += "<h1>Add New Film</h1>";
-    html += "<form method='post' action='/AddFilm'>";
-    html += "<label for='name'>Name:</label><br>";
-    html += "<input type='text' id='name' name='name'><br>";
-    html += "<label for='description'>Description:</label><br>";
-    html += "<input type='text' id='description' name='description'><br><br>";
-    html += "<input type='submit' value='Add'>";
-    html += "</form>";
-    html += "</body></html>";
 
     return Results.Content(html, "text/html");
 });
